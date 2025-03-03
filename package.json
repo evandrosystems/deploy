@@ -1,0 +1,17 @@
+{
+    "name": "deploy",
+    "author": "Evandro Alves",
+    "version": "0.0.1",
+    "description": "GitHub action to deploy files with ssh",
+    "main": "dist/index.js",
+    "engines": {
+        "node": ">=20"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@vercel/ncc": "^0.38.3"
+    },
+    "scripts": {
+      "build": "ncc build ./src/index.js -o dist"
+    }
+}
