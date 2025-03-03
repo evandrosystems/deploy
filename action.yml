@@ -1,0 +1,16 @@
+name: "evandrosystems/deploy"
+description: "GitHub action to deploy files with ssh"
+author: "Evandro Alves"
+
+branding:
+  icon: "upload"
+  color: "blue"
+
+inputs:
+  username:
+    description: "Server username"
+    required: true
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
