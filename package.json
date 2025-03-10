@@ -12,6 +12,9 @@
         "@vercel/ncc": "^0.38.3"
     },
     "scripts": {
-      "build": "ncc build ./src/index.js -o dist"
+        "build": "ncc build ./src/index.js -o dist"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7"
     }
 }

@@ -10,6 +10,22 @@ inputs:
   username:
     description: "Server username"
     required: true
+  host:
+    description: "Server host"
+    required: true
+  port:
+    description: "Server port"
+    required: false
+    default: "22"
+  key:
+    description: "SSH private key"
+    required: true
+  source:
+    description: "Source files"
+    required: true
+  destination:
+    description: "Destination folder"
+    required: true
 
 runs:
   using: "node20"
