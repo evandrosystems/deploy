@@ -12,13 +12,18 @@ async function addHostInKnownHost(host) {
     }
 
     execFile(`ssh-keyscan`,['-H', host], (err, stdout, stderr) => {
-        if (err || stderr) {
-            console.error('Error adding host to known_hosts file', err || stderr);
-            process.exit(1);
+        if (err) {
+            console.error('Error adding host to known_hosts file', err.message);
+            return;
         }
 
-        fs.appendFileSync(knownHostsFile, stdout);
-        console.log('Host added to known_hosts file');
+        if(stdout.trim()) {
+            fs.appendFileSync(knownHostsFile, stdout);
+            console.log('Host added to known_hosts file');
+        } else {
+            console.error('Error adding host to known_hosts file', 'No output from ssh-keyscan');
+        }
     });
-
 }
+
+module.exports = { addHostInKnownHost };
