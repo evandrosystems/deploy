@@ -1,14 +1,14 @@
 require('dotenv').config();
-const { addHostInKnownHost, saveKeyToFile } = require('./modules/ssh');
+const { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync } = require('./modules/ssh');
 
 async function run() {
 
     let host = process.env.HOST || '';
-    let username = process.env.USERNAME || '';
+    let username = process.env.SERVERUSER || '';
     let port = process.env.PORT || '';
     let key = process.env.KEY || '';
     let source = process.env.FILES || '';
-    let destination = process.env.PATH || '';
+    let destination = process.env.SERVERPATH || '';
     let commands = process.env.COMMANDS || '';
     let args = process.env.ARGS || '';
 
@@ -27,6 +27,7 @@ async function run() {
 
     await addHostInKnownHost(host)
     await saveKeyToFile(key)
+    await sendFilesWithRsync(source, destination, host, port, username, key, commands, args)
 }
 
 run();

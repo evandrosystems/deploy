@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { execFile } = require('child_process');
+const { execFile, execSync } = require('child_process');
 
 async function addHostInKnownHost(host) {
     const sshDir = path.join(os.homedir(), '.ssh');
@@ -44,4 +44,35 @@ async function saveKeyToFile(key) {
 
 }
 
-module.exports = { addHostInKnownHost, saveKeyToFile };
+async function sendFilesWithRsync(source, destination, host, port, username, key, commands, args) {
+    const sshDir = path.join(os.homedir(), '.ssh');
+    const keyFile = path.join(sshDir, 'id_rsa');
+
+    if (!fs.existsSync(keyFile)) {
+        console.error('Key file not found');
+        process.exit(1);
+    }
+
+    try {
+        const rsyncCommand = [
+            'rsync',
+            '--exclude=id_rsa',
+            '--exclude=node_modules',
+            '--exclude=.gitignore',
+            '--delete',
+            '-e',
+            `ssh -i ${keyFile}`,
+            '-avz',
+            `${source}/`,
+            `${username}@${host}:${destination}`
+        ].join(' ');
+
+        const output = execSync(rsyncCommand, { encoding: 'utf8' });
+        console.log(output);
+    } catch (error) {
+        console.error('Error sending files with rsync', error.message);
+        process.exit(1);
+    }
+}
+
+module.exports = { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync };
