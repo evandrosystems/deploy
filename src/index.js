@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { addHostInKnownHost, saveKeyToFile } = require('./modules/ssh');
 
 async function run() {
 
@@ -23,6 +24,9 @@ async function run() {
 
         process.exit(1);
     }
+
+    await addHostInKnownHost(host)
+    await saveKeyToFile(key)
 }
 
 run();

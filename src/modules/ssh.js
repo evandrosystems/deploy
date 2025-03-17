@@ -18,7 +18,7 @@ async function addHostInKnownHost(host) {
         }
 
         if(stdout.trim()) {
-            fs.appendFileSync(knownHostsFile, stdout);
+            fs.writeFileSync(knownHostsFile, stdout);
             console.log('Host added to known_hosts file');
         } else {
             console.error('Error adding host to known_hosts file', 'No output from ssh-keyscan');
@@ -26,4 +26,22 @@ async function addHostInKnownHost(host) {
     });
 }
 
-module.exports = { addHostInKnownHost };
+async function saveKeyToFile(key) {
+    const sshDir = path.join(os.homedir(), '.ssh');
+    const keyFile = path.join(sshDir, 'id_rsa');
+
+    try {
+        if(!fs.existsSync(sshDir)) {
+            fs.mkdirSync(sshDir, { recursive: true });
+        }
+
+        fs.writeFileSync(keyFile, key);
+        fs.chmodSync(keyFile, '600');
+
+    } catch (error) {
+        console.error('Error saving key to file', error.message);
+    }
+
+}
+
+module.exports = { addHostInKnownHost, saveKeyToFile };
