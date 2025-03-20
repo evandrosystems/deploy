@@ -11,34 +11,36 @@ const { execFile, execSync } = __nccwpck_require__(317);
 
 async function addHostInKnownHost(host) {
     const sshDir = path.join(os.homedir(), '.ssh');
-    const knownHostsFile = path.join(sshDir, 'known_hosts');
 
     if(!fs.existsSync(sshDir)) {
         fs.mkdirSync(sshDir, { recursive: true });
     }
 
+    const knownHostsFile = path.join(sshDir, 'known_hosts');
+
     try {
         execSync(`ssh-keyscan -H ${host} > ${knownHostsFile}`, { encoding: 'utf8' });
         fs.chmodSync(knownHostsFile, 0o644)
     } catch (error) {
-        console.error('Error adding host in known_hosts file', error.message);
+        console.error(error.message);
     }
 }
 
 async function saveKeyToFile(key) {
     const sshDir = path.join(os.homedir(), '.ssh');
+
+    if(!fs.existsSync(sshDir)) {
+        fs.mkdirSync(sshDir, { recursive: true });
+    }
+
     const keyFile = path.join(sshDir, 'id_rsa');
 
     try {
-        if(!fs.existsSync(sshDir)) {
-            fs.mkdirSync(sshDir, { recursive: true });
-        }
-
         fs.writeFileSync(keyFile, key);
         fs.chmodSync(keyFile, 0o600);
 
     } catch (error) {
-        console.error('Error saving key to file', error.message);
+        console.error(error.message);
     }
 
 }
@@ -58,10 +60,9 @@ async function sendFilesWithRsync(source, destination, host, port, username, key
             `${username}@${host}:${destination}`
         ].join(' ');
 
-        const output = execSync(rsyncCommand, { encoding: 'utf8' });
-        console.log(output);
+        execSync(rsyncCommand, { encoding: 'utf8' });
     } catch (error) {
-        console.error('Error sending files with rsync', error.message);
+        console.error(error.message);
         process.exit(1);
     }
 }
