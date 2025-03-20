@@ -60,9 +60,9 @@ async function sendFilesWithRsync(source, destination, host, port, username, key
             '--exclude=node_modules',
             '--exclude=.gitignore',
             '--delete',
+            '-avz',
             '-e',
             `ssh -i ${keyFile}`,
-            '-avz',
             `${source}/`,
             `${username}@${host}:${destination}`
         ].join(' ');
