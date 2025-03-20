@@ -17,19 +17,12 @@ async function addHostInKnownHost(host) {
         fs.mkdirSync(sshDir, { recursive: true });
     }
 
-    execFile(`ssh-keyscan`,['-H', host], (err, stdout, stderr) => {
-        if (err) {
-            console.error('Error adding host to known_hosts file', err.message);
-            return;
-        }
-
-        if(stdout.trim()) {
-            fs.writeFileSync(knownHostsFile, stdout);
-            console.log('Host added to known_hosts file');
-        } else {
-            console.error('Error adding host to known_hosts file', 'No output from ssh-keyscan');
-        }
-    });
+    try {
+        execSync(`ssh-keyscan -H ${host} > ${knownHostsFile}`, { encoding: 'utf8' });
+        fs.chmodSync(knownHostsFile, 0o644)
+    } catch (error) {
+        console.error('Error adding host in known_hosts file', error.message);
+    }
 }
 
 async function saveKeyToFile(key) {
@@ -42,7 +35,7 @@ async function saveKeyToFile(key) {
         }
 
         fs.writeFileSync(keyFile, key);
-        fs.chmodSync(keyFile, '600');
+        fs.chmodSync(keyFile, 0o600);
 
     } catch (error) {
         console.error('Error saving key to file', error.message);
@@ -51,14 +44,6 @@ async function saveKeyToFile(key) {
 }
 
 async function sendFilesWithRsync(source, destination, host, port, username, key, commands, args) {
-    const sshDir = path.join(os.homedir(), '.ssh');
-    const keyFile = path.join(sshDir, 'id_rsa');
-
-    if (!fs.existsSync(keyFile)) {
-        console.error('Key file not found');
-        process.exit(1);
-    }
-
     try {
         const rsyncCommand = [
             'rsync',
@@ -68,7 +53,7 @@ async function sendFilesWithRsync(source, destination, host, port, username, key
             '--delete',
             '-avz',
             '-e',
-            `ssh -i ${keyFile}`,
+            `ssh -i ~/.ssh/id_rsa`,
             `${source}/`,
             `${username}@${host}:${destination}`
         ].join(' ');
