@@ -20,7 +20,7 @@ async function addHostInKnownHost(host) {
 
     try {
         execSync(`ssh-keyscan -H ${host} > ${knownHostsFile}`, { encoding: 'utf8' });
-        fs.chmodSync(knownHostsFile, 0o644)
+        fs.chmodSync(knownHostsFile, '644')
     } catch (error) {
         console.error(error.message);
     }
@@ -37,7 +37,7 @@ async function saveKeyToFile(key) {
 
     try {
         fs.writeFileSync(keyFile, key);
-        fs.chmodSync(keyFile, 0o600);
+        fs.chmodSync(keyFile, '600');
 
     } catch (error) {
         console.error(error.message);
@@ -45,19 +45,19 @@ async function saveKeyToFile(key) {
 
 }
 
-async function sendFilesWithRsync(source, destination, host, port, username, key, commands, args) {
+async function sendFilesWithRsync(data, dir, host, port, user, key, commands, args) {
     try {
         const rsyncCommand = [
             'rsync',
+            '-avz',
+            '-e',
+            `ssh -i ~/.ssh/id_rsa`,
             '--exclude=id_rsa',
             '--exclude=node_modules',
             '--exclude=.gitignore',
             '--delete',
-            '-avz',
-            '-e',
-            `ssh -i ~/.ssh/id_rsa`,
-            `${source}/`,
-            `${username}@${host}:${destination}`
+            `${data}/`,
+            `${user}@${host}:${dir}`
         ].join(' ');
 
         execSync(rsyncCommand, { encoding: 'utf8' });
