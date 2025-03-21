@@ -7,7 +7,7 @@ branding:
   color: "blue"
 
 inputs:
-  username:
+  user:
     description: "Server username"
     required: true
   host:
@@ -20,10 +20,10 @@ inputs:
   key:
     description: "SSH private key"
     required: true
-  source:
+  data:
     description: "Source files"
     required: true
-  destination:
+  dir:
     description: "Destination folder"
     required: true
 

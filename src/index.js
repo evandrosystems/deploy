@@ -3,23 +3,23 @@ const { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync } = require('./mod
 async function run() {
 
     let host = process.env.INPUT_HOST || '';
-    let username = process.env.INPUT_SERVERUSER || '';
+    let user = process.env.INPUT_USER || '';
     let port = process.env.INPUT_PORT || '';
     let key = process.env.INPUT_KEY || '';
-    let source = process.env.INPUT_FILES || '';
-    let destination = process.env.INPUT_SERVERPATH || '';
+    let data = process.env.INPUT_DATA || '';
+    let dir = process.env.INPUT_DIR || '';
     let commands = process.env.INPUT_COMMANDS || '';
     let args = process.env.INPUT_ARGS || '';
 
 
-    if (!host || !username || !port || !key || !source || !destination) {
+    if (!host || !user || !port || !key || !data || !dir) {
 
         if (!host) console.error('HOST is required');
-        if (!username) console.error('USERNAME is required');
+        if (!user) console.error('USERNAME is required');
         if (!port) console.error('PORT is required');
         if (!key) console.error('KEY is required');
-        if (!source) console.error('FILES is required');
-        if (!destination) console.error('PATH is required');
+        if (!data) console.error('FILES is required');
+        if (!dir) console.error('PATH is required');
 
         process.exit(1);
     }
