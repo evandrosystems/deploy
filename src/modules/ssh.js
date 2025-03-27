@@ -14,7 +14,7 @@ async function addHostInKnownHost(host) {
 
     try {
         execSync(`ssh-keyscan -H ${host} > ${knownHostsFile}`, { encoding: 'utf8' });
-        fs.chmodSync(knownHostsFile, '644')
+        fs.chmodSync(knownHostsFile, 0o644)
     } catch (error) {
         console.error(error.message);
     }
@@ -28,10 +28,11 @@ async function saveKeyToFile(key) {
     }
 
     const keyFile = path.join(sshDir, 'id_rsa');
+    key = key.trim() + '\n';
 
     try {
         fs.writeFileSync(keyFile, key);
-        fs.chmodSync(keyFile, '600');
+        fs.chmodSync(keyFile, 0o600);
 
     } catch (error) {
         console.error(error.message);
