@@ -48,6 +48,9 @@ async function saveKeyToFile(key) {
 
 async function sendFilesWithRsync(data, dir, host, port, user, commands, args) {
     try {
+        dir = dir.replace(/[/\\]+$/, '');
+        data = data.replace(/[/\\]+$/, '');
+
         const rsyncCommand = [
             'rsync',
             '-avz',
