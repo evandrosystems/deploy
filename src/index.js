@@ -10,6 +10,7 @@ async function run() {
     let dir = process.env.INPUT_DIR || '';
     let commands = process.env.INPUT_COMMANDS || '';
     let args = process.env.INPUT_ARGS || '';
+    let exclude = process.env.INPUT_EXCLUDE || '';
 
 
     if (!host || !user || !port || !key || !data || !dir) {
@@ -26,7 +27,7 @@ async function run() {
 
     await addHostInKnownHost(host)
     await saveKeyToFile(key)
-    await sendFilesWithRsync(data, dir, host, port, user, commands, args)
+    await sendFilesWithRsync(data, dir, host, port, user, commands, args, exclude)
 }
 
 run();

@@ -40,10 +40,13 @@ async function saveKeyToFile(key) {
 
 }
 
-async function sendFilesWithRsync(data, dir, host, port, user, commands, args) {
+async function sendFilesWithRsync(data, dir, host, port, user, commands, args, exclude) {
     try {
         dir = dir.replace(/[/\\]+$/, '');
         data = data.replace(/[/\\]+$/, '');
+
+        exclude = exclude ? exclude.split(',').map(item => item.trim()) : [];
+        exclude = exclude.map(item => `--exclude=${item}`);
 
         const rsyncCommand = [
             'rsync',
@@ -51,8 +54,7 @@ async function sendFilesWithRsync(data, dir, host, port, user, commands, args) {
             '-e',
             `ssh -i ~/.ssh/id_rsa`,
             '--exclude=id_rsa',
-            '--exclude=node_modules',
-            '--exclude=.gitignore',
+            ...exclude,
             '--delete',
             `${data}/`,
             `${user}@${host}:${dir}`
