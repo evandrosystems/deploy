@@ -40,7 +40,7 @@ async function saveKeyToFile(key) {
 
 }
 
-async function sendFilesWithRsync(data, dir, host, port, user, key, commands, args) {
+async function sendFilesWithRsync(data, dir, host, port, user, commands, args) {
     try {
         const rsyncCommand = [
             'rsync',

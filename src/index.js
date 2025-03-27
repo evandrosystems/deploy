@@ -26,7 +26,7 @@ async function run() {
 
     await addHostInKnownHost(host)
     await saveKeyToFile(key)
-    await sendFilesWithRsync(data, dir, host, port, user, key, commands, args)
+    await sendFilesWithRsync(data, dir, host, port, user, commands, args)
 }
 
 run();

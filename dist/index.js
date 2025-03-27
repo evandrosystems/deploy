@@ -46,7 +46,7 @@ async function saveKeyToFile(key) {
 
 }
 
-async function sendFilesWithRsync(data, dir, host, port, user, key, commands, args) {
+async function sendFilesWithRsync(data, dir, host, port, user, commands, args) {
     try {
         const rsyncCommand = [
             'rsync',
@@ -171,7 +171,7 @@ async function run() {
 
     await addHostInKnownHost(host)
     await saveKeyToFile(key)
-    await sendFilesWithRsync(data, dir, host, port, user, key, commands, args)
+    await sendFilesWithRsync(data, dir, host, port, user, commands, args)
 }
 
 run();
