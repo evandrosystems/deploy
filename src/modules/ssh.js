@@ -52,7 +52,7 @@ async function sendFilesWithRsync(data, dir, host, port, user, commands, args, e
             'rsync',
             '-avz',
             '-e',
-            `ssh -i ~/.ssh/id_rsa`,
+            `ssh -i ~/.ssh/id_rsa -p ${port}`,
             '--exclude=id_rsa',
             ...exclude,
             '--delete',

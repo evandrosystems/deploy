@@ -4,7 +4,7 @@ async function run() {
 
     let host = process.env.INPUT_HOST || '';
     let user = process.env.INPUT_USER || '';
-    let port = process.env.INPUT_PORT || '';
+    let port = process.env.INPUT_PORT || '22';
     let key = process.env.INPUT_KEY || '';
     let data = process.env.INPUT_DATA || '';
     let dir = process.env.INPUT_DIR || '';
@@ -13,11 +13,10 @@ async function run() {
     let exclude = process.env.INPUT_EXCLUDE || '';
 
 
-    if (!host || !user || !port || !key || !data || !dir) {
+    if (!host || !user || !key || !data || !dir) {
 
         if (!host) console.error('HOST is required');
         if (!user) console.error('USERNAME is required');
-        if (!port) console.error('PORT is required');
         if (!key) console.error('KEY is required');
         if (!data) console.error('FILES is required');
         if (!dir) console.error('PATH is required');
