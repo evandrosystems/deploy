@@ -1,4 +1,5 @@
 const { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync } = require('./modules/ssh');
+const logger = require('./utils/logger');
 
 async function run() {
 
@@ -15,11 +16,11 @@ async function run() {
 
     if (!host || !user || !key || !data || !dir) {
 
-        if (!host) console.error('HOST is required');
-        if (!user) console.error('USERNAME is required');
-        if (!key) console.error('KEY is required');
-        if (!data) console.error('FILES is required');
-        if (!dir) console.error('PATH is required');
+        if (!host) logger.error('HOST is required');
+        if (!user) logger.error('USERNAME is required');
+        if (!key) logger.error('KEY is required');
+        if (!data) logger.error('FILES is required');
+        if (!dir) logger.error('PATH is required');
 
         process.exit(1);
     }

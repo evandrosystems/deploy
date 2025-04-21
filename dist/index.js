@@ -77,6 +77,25 @@ module.exports = { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync };
 
 /***/ }),
 
+/***/ 467:
+/***/ ((module) => {
+
+function success(message) {
+    console.log('[SUCCESS]', message);
+}
+
+function error(message) {
+    console.error('[ERROR]', message);
+}
+
+module.exports = {
+    success,
+    error
+};
+
+
+/***/ }),
+
 /***/ 317:
 /***/ ((module) => {
 
@@ -149,6 +168,7 @@ module.exports = require("path");
 /************************************************************************/
 var __webpack_exports__ = {};
 const { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync } = __nccwpck_require__(677);
+const logger = __nccwpck_require__(467);
 
 async function run() {
 
@@ -165,11 +185,11 @@ async function run() {
 
     if (!host || !user || !key || !data || !dir) {
 
-        if (!host) console.error('HOST is required');
-        if (!user) console.error('USERNAME is required');
-        if (!key) console.error('KEY is required');
-        if (!data) console.error('FILES is required');
-        if (!dir) console.error('PATH is required');
+        if (!host) logger.error('HOST is required');
+        if (!user) logger.error('USERNAME is required');
+        if (!key) logger.error('KEY is required');
+        if (!data) logger.error('FILES is required');
+        if (!dir) logger.error('PATH is required');
 
         process.exit(1);
     }
