@@ -1,13 +1,64 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 677:
+/***/ 261:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const sendFiles = __nccwpck_require__(424);
+
+module.exports = {
+    sendFiles,
+};
+
+/***/ }),
+
+/***/ 424:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { execSync } = __nccwpck_require__(317);
+const logger = __nccwpck_require__(467);
+
+async function sendFiles(data, dir, host, port, user, commands, args, exclude) {
+    dir = dir.replace(/[/\\]+$/, '');
+    data = data.replace(/[/\\]+$/, '');
+
+    exclude = exclude ? exclude.split(',').map(item => item.trim()) : [];
+    exclude = exclude.map(item => `--exclude=${item}`);
+
+    const rsyncCommand = [
+        'rsync',
+        '-avz',
+        '-e',
+        `"ssh -i ~/.ssh/id_rsa -p ${port}"`,
+        '--exclude=id_rsa',
+        ...exclude,
+        '--delete',
+        `${data}/`,
+        `${user}@${host}:${dir}`
+    ].join(' ');
+
+    try {
+        execSync(rsyncCommand, { encoding: 'utf8' });
+        logger.success(`Files sent to ${user}@${host}:${dir}`);
+
+    } catch (error) {
+        logger.error(`${error.message}`);
+        throw error;
+    }
+}
+
+module.exports = sendFiles;
+
+/***/ }),
+
+/***/ 691:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const fs = __nccwpck_require__(896);
 const path = __nccwpck_require__(928);
 const os = __nccwpck_require__(857);
-const { execFile, execSync } = __nccwpck_require__(317);
+const { execSync } = __nccwpck_require__(317);
+const logger = __nccwpck_require__(467);
 
 async function addHostInKnownHost(host) {
     const sshDir = path.join(os.homedir(), '.ssh');
@@ -20,19 +71,43 @@ async function addHostInKnownHost(host) {
 
     try {
         execSync(`ssh-keyscan -H ${host} > ${knownHostsFile}`, { encoding: 'utf8' });
-        fs.chmodSync(knownHostsFile, 0o644)
+        fs.chmodSync(knownHostsFile, 0o644);
+        logger.success(`Host ${host} added to archive know hosts.`);
     } catch (error) {
-        console.error(error.message);
+        logger.error(`${error.message}`);
+        throw error;
     }
 }
 
+module.exports = addHostInKnownHost;
+
+
+/***/ }),
+
+/***/ 838:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const addHostInKnownHost = __nccwpck_require__(691);
+const saveKeyToFile = __nccwpck_require__(937);
+
+module.exports = {
+    addHostInKnownHost,
+    saveKeyToFile,
+};
+
+
+/***/ }),
+
+/***/ 937:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const fs = __nccwpck_require__(896);
+const path = __nccwpck_require__(928);
+const os = __nccwpck_require__(857);
+const logger = __nccwpck_require__(467);
+
 async function saveKeyToFile(key) {
     const sshDir = path.join(os.homedir(), '.ssh');
-
-    if(!fs.existsSync(sshDir)) {
-        fs.mkdirSync(sshDir, { recursive: true });
-    }
-
     const keyFile = path.join(sshDir, 'id_rsa');
     key = key.trim() + '\n';
 
@@ -40,40 +115,15 @@ async function saveKeyToFile(key) {
         fs.writeFileSync(keyFile, key);
         fs.chmodSync(keyFile, 0o600);
 
+        logger.success('Key saved to ~/.ssh/id_rsa');
     } catch (error) {
-        console.error(error.message);
-    }
-
-}
-
-async function sendFilesWithRsync(data, dir, host, port, user, commands, args, exclude) {
-    try {
-        dir = dir.replace(/[/\\]+$/, '');
-        data = data.replace(/[/\\]+$/, '');
-
-        exclude = exclude ? exclude.split(',').map(item => item.trim()) : [];
-        exclude = exclude.map(item => `--exclude=${item}`);
-
-        const rsyncCommand = [
-            'rsync',
-            '-avz',
-            '-e',
-            `"ssh -i ~/.ssh/id_rsa -p ${port}"`,
-            '--exclude=id_rsa',
-            ...exclude,
-            '--delete',
-            `${data}/`,
-            `${user}@${host}:${dir}`
-        ].join(' ');
-
-        execSync(rsyncCommand, { encoding: 'utf8' });
-    } catch (error) {
-        console.error(error.message);
-        process.exit(1);
+        logger.error(`${error.message}`);
+        throw error;
     }
 }
 
-module.exports = { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync };
+module.exports = saveKeyToFile;
+
 
 /***/ }),
 
@@ -167,7 +217,8 @@ module.exports = require("path");
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-const { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync } = __nccwpck_require__(677);
+const { addHostInKnownHost, saveKeyToFile } = __nccwpck_require__(838);
+const { sendFiles } = __nccwpck_require__(261);
 const logger = __nccwpck_require__(467);
 
 async function run() {
@@ -196,7 +247,7 @@ async function run() {
 
     await addHostInKnownHost(host)
     await saveKeyToFile(key)
-    await sendFilesWithRsync(data, dir, host, port, user, commands, args, exclude)
+    await sendFiles(data, dir, host, port, user, commands, args, exclude)
 }
 
 run();

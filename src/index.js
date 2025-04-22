@@ -1,4 +1,5 @@
-const { addHostInKnownHost, saveKeyToFile, sendFilesWithRsync } = require('./modules/ssh');
+const { addHostInKnownHost, saveKeyToFile } = require('./modules/ssh');
+const { sendFiles } = require('./modules/rsync');
 const logger = require('./utils/logger');
 
 async function run() {
@@ -27,7 +28,7 @@ async function run() {
 
     await addHostInKnownHost(host)
     await saveKeyToFile(key)
-    await sendFilesWithRsync(data, dir, host, port, user, commands, args, exclude)
+    await sendFiles(data, dir, host, port, user, commands, args, exclude)
 }
 
 run();
