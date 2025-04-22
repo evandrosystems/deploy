@@ -267,7 +267,6 @@ const { validateSshInputs } = __nccwpck_require__(255);
 const logger = __nccwpck_require__(467);
 
 async function run() {
-
     const inputs = getInputs();
 
     if(!validateSshInputs(inputs)) {
@@ -275,21 +274,29 @@ async function run() {
         process.exit(1);
     }
 
-    await addHostInKnownHost(inputs.host)
-    await saveKeyToFile(inputs.key)
-    await sendFiles(
-        inputs.data,
-        inputs.dir,
-        inputs.host,
-        inputs.port,
-        inputs.user,
-        inputs.commands,
-        inputs.args,
-        inputs.exclude
-    )
+    try {
+        await addHostInKnownHost(inputs.host)
+        await saveKeyToFile(inputs.key)
+        await sendFiles(
+            inputs.data,
+            inputs.dir,
+            inputs.host,
+            inputs.port,
+            inputs.user,
+            inputs.commands,
+            inputs.args,
+            inputs.exclude
+        )
+    } catch (error) {
+        logger.error(`${error.message}`);
+        process.exit(1);
+    }
 }
 
-run();
+run().catch(error => {
+    logger.error(`Unexpected error: ${error.message}`);
+    process.exit(1);
+});
 
 module.exports = __webpack_exports__;
 /******/ })()
