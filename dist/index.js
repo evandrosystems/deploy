@@ -1,6 +1,27 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 988:
+/***/ ((module) => {
+
+function getInputs() {
+    return {
+        host: process.env.INPUT_HOST || '',
+        user: process.env.INPUT_USER || '',
+        port: process.env.INPUT_PORT || '22',
+        key: process.env.INPUT_KEY || '',
+        data: process.env.INPUT_DATA || '',
+        dir: process.env.INPUT_DIR || '',
+        commands: process.env.INPUT_COMMANDS || '',
+        args: process.env.INPUT_ARGS || '',
+        exclude: process.env.INPUT_EXCLUDE || ''
+    };
+}
+
+module.exports = { getInputs };
+
+/***/ }),
+
 /***/ 261:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -127,6 +148,28 @@ module.exports = saveKeyToFile;
 
 /***/ }),
 
+/***/ 255:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const logger = __nccwpck_require__(467);
+
+function validateSshInputs({ host, user, key, data, dir }) {
+    let valid = true;
+
+    if (!host) { logger.error('HOST is required.'); valid = false; }
+    if (!user) { logger.error('USER is required.'); valid = false; }
+    if (!key)  { logger.error('KEY is required.'); valid = false; }
+    if (!data) { logger.error('DATA is required.'); valid = false; }
+    if (!dir)  { logger.error('DIR is required.'); valid = false; }
+
+    return valid;
+}
+
+module.exports = { validateSshInputs };
+
+
+/***/ }),
+
 /***/ 467:
 /***/ ((module) => {
 
@@ -219,35 +262,31 @@ module.exports = require("path");
 var __webpack_exports__ = {};
 const { addHostInKnownHost, saveKeyToFile } = __nccwpck_require__(838);
 const { sendFiles } = __nccwpck_require__(261);
+const { getInputs } = __nccwpck_require__(988);
+const { validateSshInputs } = __nccwpck_require__(255);
 const logger = __nccwpck_require__(467);
 
 async function run() {
 
-    let host = process.env.INPUT_HOST || '';
-    let user = process.env.INPUT_USER || '';
-    let port = process.env.INPUT_PORT || '22';
-    let key = process.env.INPUT_KEY || '';
-    let data = process.env.INPUT_DATA || '';
-    let dir = process.env.INPUT_DIR || '';
-    let commands = process.env.INPUT_COMMANDS || '';
-    let args = process.env.INPUT_ARGS || '';
-    let exclude = process.env.INPUT_EXCLUDE || '';
+    const inputs = getInputs();
 
-
-    if (!host || !user || !key || !data || !dir) {
-
-        if (!host) logger.error('HOST is required');
-        if (!user) logger.error('USERNAME is required');
-        if (!key) logger.error('KEY is required');
-        if (!data) logger.error('FILES is required');
-        if (!dir) logger.error('PATH is required');
-
+    if(!validateSshInputs(inputs)) {
+        logger.error('Validation failed. Please check the inputs.');
         process.exit(1);
     }
 
-    await addHostInKnownHost(host)
-    await saveKeyToFile(key)
-    await sendFiles(data, dir, host, port, user, commands, args, exclude)
+    await addHostInKnownHost(inputs.host)
+    await saveKeyToFile(inputs.key)
+    await sendFiles(
+        inputs.data,
+        inputs.dir,
+        inputs.host,
+        inputs.port,
+        inputs.user,
+        inputs.commands,
+        inputs.args,
+        inputs.exclude
+    )
 }
 
 run();
