@@ -32,6 +32,6 @@ async function run() {
 }
 
 run().catch(error => {
-    logger.error(`Unexpected error: ${error.message}`);
+    logger.error(`${error.message}`);
     process.exit(1);
 });
