@@ -12,7 +12,7 @@ function getInputs() {
         key: process.env.INPUT_KEY || '',
         data: process.env.INPUT_DATA || '',
         dir: process.env.INPUT_DIR || '',
-        commands: process.env.INPUT_COMMANDS || '',
+        beforeCommands: process.env['INPUT_BEFORE-COMMANDS'] || '',
         args: process.env.INPUT_ARGS || '',
         exclude: process.env.INPUT_EXCLUDE || ''
     };
@@ -105,15 +105,45 @@ module.exports = addHostInKnownHost;
 
 /***/ }),
 
+/***/ 642:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { execSync } = __nccwpck_require__(317);
+const logger = __nccwpck_require__(467);
+
+async function beforeCommand({host, port, user, beforeCommands}) {
+    const command = [
+        `ssh`,
+        `-i ~/.ssh/id_rsa`,
+        `-p ${port}`,
+        `${user}@${host}`,
+        `"set -e; ${beforeCommands.join(' && ')}"`
+    ].join(' ');
+
+    try {
+        execSync(command, { encoding: 'utf8' });
+        logger.success(`Commands executed in server`);
+    } catch (error) {
+        logger.error(`${error.message}`);
+        throw error;
+    }
+}
+
+module.exports = beforeCommand;
+
+/***/ }),
+
 /***/ 838:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const addHostInKnownHost = __nccwpck_require__(691);
 const saveKeyToFile = __nccwpck_require__(937);
+const beforeCommand = __nccwpck_require__(642);
 
 module.exports = {
     addHostInKnownHost,
     saveKeyToFile,
+    beforeCommand
 };
 
 
@@ -260,7 +290,7 @@ module.exports = require("path");
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-const { addHostInKnownHost, saveKeyToFile } = __nccwpck_require__(838);
+const { addHostInKnownHost, saveKeyToFile, beforeCommand } = __nccwpck_require__(838);
 const { sendFiles } = __nccwpck_require__(261);
 const { getInputs } = __nccwpck_require__(988);
 const { validateSshInputs } = __nccwpck_require__(255);
@@ -277,6 +307,7 @@ async function run() {
     try {
         await addHostInKnownHost(inputs.host)
         await saveKeyToFile(inputs.key)
+        await beforeCommand(inputs)
         await sendFiles(
             inputs.data,
             inputs.dir,
@@ -294,7 +325,7 @@ async function run() {
 }
 
 run().catch(error => {
-    logger.error(`Unexpected error: ${error.message}`);
+    logger.error(`${error.message}`);
     process.exit(1);
 });
 

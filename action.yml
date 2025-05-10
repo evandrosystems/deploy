@@ -26,6 +26,9 @@ inputs:
   dir:
     description: "Destination folder"
     required: true
+  before-commands:
+    description: "Commands to run before deploying"
+    required: false
 
 runs:
   using: "node20"
