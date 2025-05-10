@@ -112,6 +112,13 @@ const { execSync } = __nccwpck_require__(317);
 const logger = __nccwpck_require__(467);
 
 async function beforeCommand({host, port, user, beforeCommands}) {
+    if (typeof beforeCommands === 'string') {
+        beforeCommands = beforeCommands
+            .split('\n')
+            .map(cmd => cmd.trim())
+            .filter(cmd => cmd.length > 0);
+    }
+
     const command = [
         `ssh`,
         `-i ~/.ssh/id_rsa`,
