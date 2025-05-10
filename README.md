@@ -1,4 +1,4 @@
-# 🚀 Deploy via SSH
+## 🚀 Deploy via SSH
 
 Esse action realiza o deploy automatizado de arquivos para um servidor remoto via SSH. É útil para projetos onde você deseja publicar arquivos (como sites, sistemas, APIs ou assets) diretamente de um repositório do GitHub.
 
@@ -68,4 +68,4 @@ Esse action realiza o deploy automatizado de arquivos para um servidor remoto vi
 
 ## 📄 Licença
 
-MIT © [evandrosystems](https://evandrosystems.com)
+MIT © <a href="https://evandrosystems.com" target="_blank" rel="noopener noreferrer">evandrosystems</a>
