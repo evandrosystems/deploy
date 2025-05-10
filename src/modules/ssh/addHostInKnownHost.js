@@ -16,7 +16,7 @@ async function addHostInKnownHost(host) {
     try {
         execSync(`ssh-keyscan -H ${host} > ${knownHostsFile} 2>/dev/null`, { encoding: 'utf8', stdio: 'ignore' });
         fs.chmodSync(knownHostsFile, 0o644);
-        logger.success(`Host ${host} added to archive know hosts.`);
+        logger.success(`Host added to archive know hosts.`);
     } catch (error) {
         logger.error(`${error.message}`);
         throw error;

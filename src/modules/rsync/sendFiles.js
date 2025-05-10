@@ -22,7 +22,7 @@ async function sendFiles(data, dir, host, port, user, commands, args, exclude) {
 
     try {
         execSync(rsyncCommand, { encoding: 'utf8' });
-        logger.success(`Files sent to ${user}@${host}:${dir}`);
+        logger.success(`Files sent to server`);
 
     } catch (error) {
         logger.error(`${error.message}`);
