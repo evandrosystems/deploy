@@ -1,9 +1,9 @@
 const addHostInKnownHost = require('./addHostInKnownHost');
 const saveKeyToFile = require('./saveKeyToFile');
-const beforeCommand = require('./beforeCommand');
+const execCommand = require('./execCommand');
 
 module.exports = {
     addHostInKnownHost,
     saveKeyToFile,
-    beforeCommand
+    execCommand
 };

@@ -1,4 +1,8 @@
-const { addHostInKnownHost, saveKeyToFile, beforeCommand } = require('./modules/ssh');
+const {
+    addHostInKnownHost,
+    saveKeyToFile,
+    execCommand
+} = require('./modules/ssh');
 const { sendFiles } = require('./modules/rsync');
 const { getInputs } = require('./modules/input');
 const { validateSshInputs } = require('./modules/validation');
@@ -15,7 +19,7 @@ async function run() {
     try {
         await addHostInKnownHost(inputs.host)
         await saveKeyToFile(inputs.key)
-        await beforeCommand(inputs)
+        await execCommand(inputs)
         await sendFiles(
             inputs.data,
             inputs.dir,

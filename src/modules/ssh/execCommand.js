@@ -1,9 +1,9 @@
 const { execSync } = require('child_process');
 const logger = require('../../utils/logger');
 
-async function beforeCommand({host, port, user, beforeCommands}) {
-    if (typeof beforeCommands === 'string') {
-        beforeCommands = beforeCommands
+async function execCommand({host, port, user, commands}) {
+    if (typeof commands === 'string') {
+        commands = commands
             .split('\n')
             .map(cmd => cmd.trim())
             .filter(cmd => cmd.length > 0);
@@ -14,7 +14,7 @@ async function beforeCommand({host, port, user, beforeCommands}) {
         `-i ~/.ssh/id_rsa`,
         `-p ${port}`,
         `${user}@${host}`,
-        `"set -e; ${beforeCommands.join(' && ')}"`
+        `"set -e; ${commands.join(' && ')}"`
     ].join(' ');
 
     try {
@@ -26,4 +26,4 @@ async function beforeCommand({host, port, user, beforeCommands}) {
     }
 }
 
-module.exports = beforeCommand;
+module.exports = execCommand;

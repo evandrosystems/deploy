@@ -105,15 +105,15 @@ module.exports = addHostInKnownHost;
 
 /***/ }),
 
-/***/ 642:
+/***/ 184:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { execSync } = __nccwpck_require__(317);
 const logger = __nccwpck_require__(467);
 
-async function beforeCommand({host, port, user, beforeCommands}) {
-    if (typeof beforeCommands === 'string') {
-        beforeCommands = beforeCommands
+async function execCommand({host, port, user, commands}) {
+    if (typeof commands === 'string') {
+        commands = commands
             .split('\n')
             .map(cmd => cmd.trim())
             .filter(cmd => cmd.length > 0);
@@ -124,7 +124,7 @@ async function beforeCommand({host, port, user, beforeCommands}) {
         `-i ~/.ssh/id_rsa`,
         `-p ${port}`,
         `${user}@${host}`,
-        `"set -e; ${beforeCommands.join(' && ')}"`
+        `"set -e; ${commands.join(' && ')}"`
     ].join(' ');
 
     try {
@@ -136,7 +136,7 @@ async function beforeCommand({host, port, user, beforeCommands}) {
     }
 }
 
-module.exports = beforeCommand;
+module.exports = execCommand;
 
 /***/ }),
 
@@ -145,12 +145,12 @@ module.exports = beforeCommand;
 
 const addHostInKnownHost = __nccwpck_require__(691);
 const saveKeyToFile = __nccwpck_require__(937);
-const beforeCommand = __nccwpck_require__(642);
+const execCommand = __nccwpck_require__(184);
 
 module.exports = {
     addHostInKnownHost,
     saveKeyToFile,
-    beforeCommand
+    execCommand
 };
 
 
@@ -297,7 +297,11 @@ module.exports = require("path");
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-const { addHostInKnownHost, saveKeyToFile, beforeCommand } = __nccwpck_require__(838);
+const {
+    addHostInKnownHost,
+    saveKeyToFile,
+    execCommand
+} = __nccwpck_require__(838);
 const { sendFiles } = __nccwpck_require__(261);
 const { getInputs } = __nccwpck_require__(988);
 const { validateSshInputs } = __nccwpck_require__(255);
@@ -314,7 +318,7 @@ async function run() {
     try {
         await addHostInKnownHost(inputs.host)
         await saveKeyToFile(inputs.key)
-        await beforeCommand(inputs)
+        await execCommand(inputs)
         await sendFiles(
             inputs.data,
             inputs.dir,
