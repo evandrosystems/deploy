@@ -19,12 +19,16 @@ async function run() {
     try {
         await addHostInKnownHost(inputs.host)
         await saveKeyToFile(inputs.key)
-        await execCommand(
-            inputs.host,
-            inputs.port,
-            inputs.user,
-            inputs.beforeCommands
-        )
+
+        if (inputs.beforeCommands.length > 0) {
+            await execCommand(
+                inputs.host,
+                inputs.port,
+                inputs.user,
+                inputs.beforeCommands
+            )
+        }
+
         await sendFiles(
             inputs.data,
             inputs.dir,
@@ -35,12 +39,15 @@ async function run() {
             inputs.args,
             inputs.exclude
         )
-        await execCommand(
-            inputs.host,
-            inputs.port,
-            inputs.user,
-            inputs.afterCommands
-        )
+
+        if(inputs.afterCommands.length > 0) {
+            await execCommand(
+                inputs.host,
+                inputs.port,
+                inputs.user,
+                inputs.afterCommands
+            )
+        }
     } catch (error) {
         logger.error(`${error.message}`);
         process.exit(1);
