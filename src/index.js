@@ -19,7 +19,12 @@ async function run() {
     try {
         await addHostInKnownHost(inputs.host)
         await saveKeyToFile(inputs.key)
-        await execCommand(inputs)
+        await execCommand(
+            inputs.host,
+            inputs.port,
+            inputs.user,
+            inputs.beforeCommands
+        )
         await sendFiles(
             inputs.data,
             inputs.dir,

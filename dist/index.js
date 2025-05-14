@@ -111,7 +111,7 @@ module.exports = addHostInKnownHost;
 const { execSync } = __nccwpck_require__(317);
 const logger = __nccwpck_require__(467);
 
-async function execCommand({host, port, user, commands}) {
+async function execCommand(host, port, user, commands) {
     if (typeof commands === 'string') {
         commands = commands
             .split('\n')
@@ -318,7 +318,12 @@ async function run() {
     try {
         await addHostInKnownHost(inputs.host)
         await saveKeyToFile(inputs.key)
-        await execCommand(inputs)
+        await execCommand(
+            inputs.host,
+            inputs.port,
+            inputs.user,
+            inputs.beforeCommands
+        )
         await sendFiles(
             inputs.data,
             inputs.dir,

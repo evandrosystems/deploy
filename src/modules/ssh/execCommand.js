@@ -1,7 +1,7 @@
 const { execSync } = require('child_process');
 const logger = require('../../utils/logger');
 
-async function execCommand({host, port, user, commands}) {
+async function execCommand(host, port, user, commands) {
     if (typeof commands === 'string') {
         commands = commands
             .split('\n')
