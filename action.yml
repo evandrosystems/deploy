@@ -29,6 +29,10 @@ inputs:
   before-commands:
     description: "Commands to run before deploying"
     required: false
+  after-commands:
+    description: "Commands to run after deploying"
+    required: false
+
 
 runs:
   using: "node20"

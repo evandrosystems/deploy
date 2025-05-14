@@ -7,6 +7,7 @@ function getInputs() {
         data: process.env.INPUT_DATA || '',
         dir: process.env.INPUT_DIR || '',
         beforeCommands: process.env['INPUT_BEFORE-COMMANDS'] || '',
+        afterCommands: process.env['INPUT_AFTER-COMMANDS'] || '',
         args: process.env.INPUT_ARGS || '',
         exclude: process.env.INPUT_EXCLUDE || ''
     };

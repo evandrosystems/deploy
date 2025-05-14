@@ -35,6 +35,12 @@ async function run() {
             inputs.args,
             inputs.exclude
         )
+        await execCommand(
+            inputs.host,
+            inputs.port,
+            inputs.user,
+            inputs.afterCommands
+        )
     } catch (error) {
         logger.error(`${error.message}`);
         process.exit(1);
