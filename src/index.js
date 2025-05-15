@@ -18,7 +18,7 @@ async function run() {
 
     try {
         await addHostInKnownHost(inputs.host);
-        await saveKeyToFile(inputs.key);
+        await saveKeyToFile(inputs.key, inputs.keyPermission);
 
         if (inputs.beforeCommands.length > 0) {
             await execCommand(

@@ -10,6 +10,7 @@ function getInputs() {
         user: process.env.INPUT_USER || '',
         port: process.env.INPUT_PORT || '22',
         key: process.env.INPUT_KEY || '',
+        keyPermission: process.env['INPUT_KEY-PERMISSION'] || '0600',
         data: process.env.INPUT_DATA || '',
         dir: process.env.INPUT_DIR || '',
         beforeCommands: process.env['INPUT_BEFORE-COMMANDS'] || '',
@@ -165,14 +166,14 @@ const path = __nccwpck_require__(928);
 const os = __nccwpck_require__(857);
 const logger = __nccwpck_require__(467);
 
-async function saveKeyToFile(key) {
+async function saveKeyToFile(key, permission) {
     const sshDir = path.join(os.homedir(), '.ssh');
     const keyFile = path.join(sshDir, 'id_rsa');
     key = key.trim() + '\n';
 
     try {
         fs.writeFileSync(keyFile, key);
-        fs.chmodSync(keyFile, 0o600);
+        fs.chmodSync(keyFile, permission);
 
         logger.success('Key saved to ~/.ssh/id_rsa');
     } catch (error) {
@@ -318,7 +319,7 @@ async function run() {
 
     try {
         await addHostInKnownHost(inputs.host);
-        await saveKeyToFile(inputs.key);
+        await saveKeyToFile(inputs.key, inputs.keyPermission);
 
         if (inputs.beforeCommands.length > 0) {
             await execCommand(

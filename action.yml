@@ -20,6 +20,10 @@ inputs:
   key:
     description: "SSH private key"
     required: true
+  key-permission:
+    description: "SSH private key permissions"
+    required: false
+    default: "0600"
   data:
     description: "Source files"
     required: true
