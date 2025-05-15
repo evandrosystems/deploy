@@ -12,4 +12,15 @@ function validateSshInputs({ host, user, key, data, dir }) {
     return valid;
 }
 
-module.exports = { validateSshInputs };
+/**
+ * Validate SSH key permission.
+ * @param {string} permission - The permission string.
+ * @returns {boolean} - True if valid, false otherwise.
+ */
+function validateOctalPermission(permission) {
+    const octalRegex = /^[0-7]{3,4}$/;
+    return octalRegex.test(permission);
+}
+
+
+module.exports = { validateSshInputs, validateOctalPermission };

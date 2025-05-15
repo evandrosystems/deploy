@@ -165,15 +165,22 @@ const fs = __nccwpck_require__(896);
 const path = __nccwpck_require__(928);
 const os = __nccwpck_require__(857);
 const logger = __nccwpck_require__(467);
+const { validateOctalPermission } = __nccwpck_require__(255);
 
 async function saveKeyToFile(key, permission) {
+    if(!validateOctalPermission(permission)) {
+        throw new Error(
+            'Invalid permission! Please provide a valid octal permission for SSH keys, such as 400, 600, or 0600.'
+        );
+    }
+
     const sshDir = path.join(os.homedir(), '.ssh');
     const keyFile = path.join(sshDir, 'id_rsa');
     key = key.trim() + '\n';
 
     try {
         fs.writeFileSync(keyFile, key);
-        fs.chmodSync(keyFile, permission);
+        fs.chmodSync(keyFile, parseInt(permission, 8));
 
         logger.success('Key saved to ~/.ssh/id_rsa');
     } catch (error) {
@@ -204,7 +211,18 @@ function validateSshInputs({ host, user, key, data, dir }) {
     return valid;
 }
 
-module.exports = { validateSshInputs };
+/**
+ * Validate SSH key permission.
+ * @param {string} permission - The permission string.
+ * @returns {boolean} - True if valid, false otherwise.
+ */
+function validateOctalPermission(permission) {
+    const octalRegex = /^[0-7]{3,4}$/;
+    return octalRegex.test(permission);
+}
+
+
+module.exports = { validateSshInputs, validateOctalPermission };
 
 
 /***/ }),
