@@ -22,12 +22,16 @@ Esse action realiza o deploy automatizado de arquivos para um servidor remoto vi
     host: ${{ secrets.HOST }}
     user: ${{ secrets.USERNAME }}
     key: ${{ secrets.PRIVATE_KEY }}
+    key-permission: 400
     data: /dist
     dir: ${{ secrets.DIR }}
     port: 22
     before-commands: |
       cd /home/portfolio
       chmod -R 755 uploads
+    after-commands: |
+      cd /home/portfolio
+      rm -rf /uploads
 ```
 
 ---
@@ -39,10 +43,12 @@ Esse action realiza o deploy automatizado de arquivos para um servidor remoto vi
 | `host`            | ✅ Sim      | Endereço do servidor (IP ou domínio).                                    |
 | `user`            | ✅ Sim      | Usuário do servidor que será utilizado para a conexão                    |
 | `key`             | ✅ Sim      | Chave privada SSH (deve ser armazenada como secret).                     |
+| `key-permission`  | ❌ Não      | Altera a permissão da chave privada. (Padrão: `600`).                    |
 | `data`            | ✅ Sim      | Arquivo ou diretório que será enviado para o servidor.                   |
 | `dir`             | ✅ Sim      | Caminho **absoluto** no servidor para onde os arquivos serão enviados.   |
-| `port`            | ❌ Não      | Porta do SSH (padrão: `22`).                                             |
-| `before-commands` | ❌ Não      | Comandos executados **antes** do envio dos arquivos. Pode ser multilinha.|
+| `port`            | ❌ Não      | Porta do SSH. (Padrão: `22`).                                            |
+| `before-commands` | ❌ Não      | Comandos executados **antes** do envio dos arquivos.                     |
+| `after-commands`  | ❌ Não      | Comandos executados **depois** do envio dos arquivos.                    |
 
 ---
 
