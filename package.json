@@ -16,8 +16,5 @@
         "build": "ncc build ./src/index.js -o dist",
         "lint": "eslint src",
         "lint:fix": "eslint --fix"
-    },
-    "dependencies": {
-        "dotenv": "^16.4.7"
     }
 }
