@@ -17,8 +17,8 @@ async function run() {
     }
 
     try {
-        await addHostInKnownHost(inputs.host)
-        await saveKeyToFile(inputs.key)
+        await addHostInKnownHost(inputs.host);
+        await saveKeyToFile(inputs.key);
 
         if (inputs.beforeCommands.length > 0) {
             await execCommand(
@@ -26,7 +26,7 @@ async function run() {
                 inputs.port,
                 inputs.user,
                 inputs.beforeCommands
-            )
+            );
         }
 
         await sendFiles(
@@ -38,7 +38,7 @@ async function run() {
             inputs.commands,
             inputs.args,
             inputs.exclude
-        )
+        );
 
         if(inputs.afterCommands.length > 0) {
             await execCommand(
@@ -46,7 +46,7 @@ async function run() {
                 inputs.port,
                 inputs.user,
                 inputs.afterCommands
-            )
+            );
         }
     } catch (error) {
         logger.error(`${error.message}`);

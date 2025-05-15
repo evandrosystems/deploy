@@ -9,10 +9,13 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "@vercel/ncc": "^0.38.3"
+        "@vercel/ncc": "^0.38.3",
+        "eslint": "^9.26.0"
     },
     "scripts": {
-        "build": "ncc build ./src/index.js -o dist"
+        "build": "ncc build ./src/index.js -o dist",
+        "lint": "eslint src",
+        "lint:fix": "eslint --fix"
     },
     "dependencies": {
         "dotenv": "^16.4.7"
