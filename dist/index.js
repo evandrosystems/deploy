@@ -165,10 +165,10 @@ const fs = __nccwpck_require__(896);
 const path = __nccwpck_require__(928);
 const os = __nccwpck_require__(857);
 const logger = __nccwpck_require__(467);
-const { validateOctalPermission } = __nccwpck_require__(255);
+const validate = __nccwpck_require__(255);
 
 async function saveKeyToFile(key, permission) {
-    if(!validateOctalPermission(permission)) {
+    if(!validate.octalPermission(permission)) {
         throw new Error(
             'Invalid permission! Please provide a valid octal permission for SSH keys, such as 400, 600, or 0600.'
         );
@@ -197,9 +197,40 @@ module.exports = saveKeyToFile;
 /***/ 255:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const sshInputs = __nccwpck_require__(936);
+const octalPermission = __nccwpck_require__(835);
+
+module.exports = {
+    sshInputs,
+    octalPermission
+};
+
+
+/***/ }),
+
+/***/ 835:
+/***/ ((module) => {
+
+/**
+ * Validate SSH key permission.
+ * @param {string} permission - The permission string.
+ * @returns {boolean} - True if valid, false otherwise.
+ */
+function octalPermission(permission) {
+    const octalRegex = /^[0-7]{3,4}$/;
+    return octalRegex.test(permission);
+}
+
+module.exports = octalPermission;
+
+/***/ }),
+
+/***/ 936:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
 const logger = __nccwpck_require__(467);
 
-function validateSshInputs({ host, user, key, data, dir }) {
+function sshInputs({ host, user, key, data, dir }) {
     let valid = true;
 
     if (!host) { logger.error('HOST is required.'); valid = false; }
@@ -211,19 +242,7 @@ function validateSshInputs({ host, user, key, data, dir }) {
     return valid;
 }
 
-/**
- * Validate SSH key permission.
- * @param {string} permission - The permission string.
- * @returns {boolean} - True if valid, false otherwise.
- */
-function validateOctalPermission(permission) {
-    const octalRegex = /^[0-7]{3,4}$/;
-    return octalRegex.test(permission);
-}
-
-
-module.exports = { validateSshInputs, validateOctalPermission };
-
+module.exports = sshInputs;
 
 /***/ }),
 
@@ -324,13 +343,13 @@ const {
 } = __nccwpck_require__(838);
 const { sendFiles } = __nccwpck_require__(261);
 const { getInputs } = __nccwpck_require__(988);
-const { validateSshInputs } = __nccwpck_require__(255);
+const validate = __nccwpck_require__(255);
 const logger = __nccwpck_require__(467);
 
 async function run() {
     const inputs = getInputs();
 
-    if(!validateSshInputs(inputs)) {
+    if(!validate.sshInputs(inputs)) {
         logger.error('Validation failed. Please check the inputs.');
         process.exit(1);
     }

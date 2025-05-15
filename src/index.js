@@ -5,13 +5,13 @@ const {
 } = require('./modules/ssh');
 const { sendFiles } = require('./modules/rsync');
 const { getInputs } = require('./modules/input');
-const { validateSshInputs } = require('./modules/validation');
+const validate = require('./modules/validation');
 const logger = require('./utils/logger');
 
 async function run() {
     const inputs = getInputs();
 
-    if(!validateSshInputs(inputs)) {
+    if(!validate.sshInputs(inputs)) {
         logger.error('Validation failed. Please check the inputs.');
         process.exit(1);
     }

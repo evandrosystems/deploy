@@ -2,10 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const logger = require('../../utils/logger');
-const { validateOctalPermission } = require('../validation');
+const validate = require('../validation');
 
 async function saveKeyToFile(key, permission) {
-    if(!validateOctalPermission(permission)) {
+    if(!validate.octalPermission(permission)) {
         throw new Error(
             'Invalid permission! Please provide a valid octal permission for SSH keys, such as 400, 600, or 0600.'
         );
