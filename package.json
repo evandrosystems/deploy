@@ -16,6 +16,7 @@
     "scripts": {
         "build": "ncc build ./src/index.js -o dist",
         "lint": "eslint src",
-        "lint:fix": "eslint --fix"
+        "lint:fix": "eslint --fix",
+        "test": "jest --passWithNoTests"
     }
 }
