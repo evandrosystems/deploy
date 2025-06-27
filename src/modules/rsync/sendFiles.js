@@ -21,7 +21,7 @@ async function sendFiles(data, dir, host, port, user, commands, args, exclude) {
     ].join(' ');
 
     try {
-        execSync(rsyncCommand, { encoding: 'utf8' });
+        execSync(rsyncCommand, { encoding: 'utf8', stdio: 'inherit' });
         logger.success(`Files sent to server`);
 
     } catch (error) {
