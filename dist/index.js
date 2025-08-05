@@ -45,7 +45,9 @@ async function sendFiles(data, dir, host, port, user, commands, args, exclude) {
     dir = dir.replace(/[/\\]+$/, '');
     data = data.replace(/[/\\]+$/, '');
 
-    exclude = exclude ? exclude.split(',').map(item => item.trim()) : [];
+    exclude = exclude
+        ? exclude.split(/[\n,]/).map(item => item.trim()).filter(Boolean)
+        : [];
     exclude = exclude.map(item => `--exclude=${item}`);
 
     const rsyncCommand = [
