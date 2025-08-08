@@ -41,7 +41,7 @@ module.exports = {
 const { execSync } = __nccwpck_require__(317);
 const logger = __nccwpck_require__(467);
 
-async function sendFiles(data, dir, host, port, user, commands, args, exclude) {
+async function sendFiles(data, dir, host, port, user, args, exclude) {
     dir = dir.replace(/[/\\]+$/, '');
     data = data.replace(/[/\\]+$/, '');
 
@@ -375,7 +375,6 @@ async function run() {
             inputs.host,
             inputs.port,
             inputs.user,
-            inputs.commands,
             inputs.args,
             inputs.exclude
         );

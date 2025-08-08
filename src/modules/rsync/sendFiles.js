@@ -1,7 +1,7 @@
 const { execSync } = require('child_process');
 const logger = require('../../utils/logger');
 
-async function sendFiles(data, dir, host, port, user, commands, args, exclude) {
+async function sendFiles(data, dir, host, port, user, args, exclude) {
     dir = dir.replace(/[/\\]+$/, '');
     data = data.replace(/[/\\]+$/, '');
 
