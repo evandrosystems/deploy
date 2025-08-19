@@ -15,7 +15,7 @@ function getInputs() {
         dir: process.env.INPUT_DIR || '',
         beforeCommands: process.env['INPUT_BEFORE-COMMANDS'] || '',
         afterCommands: process.env['INPUT_AFTER-COMMANDS'] || '',
-        args: process.env.INPUT_ARGS || '',
+        flags: process.env.INPUT_FLAGS || '',
         exclude: process.env.INPUT_EXCLUDE || ''
     };
 }
@@ -58,20 +58,20 @@ function buildExcludeFlags(list) {
     return list.map(item => `--exclude=${item}`);
 }
 
-async function sendFiles(data, dir, host, port, user, args, exclude) {
+async function sendFiles(data, dir, host, port, user, flags, exclude) {
     dir = dir.replace(/[/\\]+$/, '');
     data = data.replace(/[/\\]+$/, '');
 
     exclude = buildExcludeFlags(parseList(exclude));
-    args = parseList(args);
-    args = [
+    flags = parseList(flags);
+    flags = [
         '--exclude=id_rsa',
         ...exclude,
-        ...args
+        ...flags
     ];
 
     const rsyncCommand = [
-        ...args,
+        ...flags,
         '-e',
         `ssh -i ~/.ssh/id_rsa -p ${port}`,
         `${data}/`,
@@ -391,7 +391,7 @@ async function run() {
             inputs.host,
             inputs.port,
             inputs.user,
-            inputs.args,
+            inputs.flags,
             inputs.exclude
         );
 
