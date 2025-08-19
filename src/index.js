@@ -35,7 +35,7 @@ async function run() {
             inputs.host,
             inputs.port,
             inputs.user,
-            inputs.args,
+            inputs.flags,
             inputs.exclude
         );
 

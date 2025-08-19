@@ -1,29 +1,45 @@
-const { execSync } = require('child_process');
+const { execFileSync} = require('child_process');
 const logger = require('../../utils/logger');
 
-async function sendFiles(data, dir, host, port, user, args, exclude) {
+/**
+ * Converts a comma or newline separated string into an array.
+ * Ex: "foo, bar\nbaz" -> ["foo", "bar", "baz"]
+ */
+function parseList(str) {
+    return str
+        ? str.split(/[\n,]/).map(item => item.trim()).filter(Boolean)
+        : [];
+}
+
+/**
+ * Builds an array of rsync exclude flags from a list.
+* */
+function buildExcludeFlags(list) {
+    return list.map(item => `--exclude=${item}`);
+}
+
+async function sendFiles(data, dir, host, port, user, flags, exclude) {
     dir = dir.replace(/[/\\]+$/, '');
     data = data.replace(/[/\\]+$/, '');
 
-    exclude = exclude
-        ? exclude.split(/[\n,]/).map(item => item.trim()).filter(Boolean)
-        : [];
-    exclude = exclude.map(item => `--exclude=${item}`);
-
-    const rsyncCommand = [
-        'rsync',
-        '-avz',
-        '-e',
-        `"ssh -i ~/.ssh/id_rsa -p ${port}"`,
+    exclude = buildExcludeFlags(parseList(exclude));
+    flags = parseList(flags);
+    flags = [
         '--exclude=id_rsa',
         ...exclude,
-        '--delete',
+        ...flags
+    ];
+
+    const rsyncCommand = [
+        ...flags,
+        '-e',
+        `ssh -i ~/.ssh/id_rsa -p ${port}`,
         `${data}/`,
         `${user}@${host}:${dir}`
-    ].join(' ');
+    ];
 
     try {
-        execSync(rsyncCommand, { encoding: 'utf8', stdio: 'inherit' });
+        execFileSync('rsync', rsyncCommand, { stdio: 'inherit' });
         logger.success(`Files sent to server`);
 
     } catch (error) {

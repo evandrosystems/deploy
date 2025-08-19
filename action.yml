@@ -33,6 +33,10 @@ inputs:
   exclude:
     description: "Files to exclude"
     required: false
+  flags:
+    description: "Additional arguments for rsync"
+    required: false
+    default: ""
   before-commands:
     description: "Commands to run before deploying"
     required: false
