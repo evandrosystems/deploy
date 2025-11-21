@@ -14,7 +14,7 @@ async function execCommand(host, port, user, commands) {
         `-i ~/.ssh/id_rsa`,
         `-p ${port}`,
         `${user}@${host}`,
-        `"set -e; ${commands.join(' && ')}"`
+        `"set -e; ${commands.map(c => c.replace(/"/g, '\\"')).join(' && ')}"`
     ].join(' ');
 
     try {
